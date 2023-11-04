@@ -1,6 +1,10 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -15,9 +19,24 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        android.buildFeatures.buildConfig = true
+
         vectorDrawables {
             useSupportLibrary = true
         }
+        // Reads local.properties
+        val localProperties = gradleLocalProperties(rootDir)
+        buildConfigField(
+            "String",
+            "API_ID",
+            "\"" + (System.getenv("API_ID") ?: localProperties["API_ID"]) + "\""
+        )
+        buildConfigField(
+            "String",
+            "API_SECRET",
+            "\"" + (System.getenv("API_SECRET") ?: localProperties["API_SECRET"]) + "\""
+        )
+
     }
 
     buildTypes {
@@ -30,11 +49,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -50,9 +69,9 @@ android {
 }
 
 dependencies {
-
     val composeVersion = "1.4.2"
     val retrofit_version = "2.5.0"
+    val dagger_version = "2.15"
 
     implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -75,4 +94,9 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
     implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
+    // Dagger 2 DI
+    implementation ("com.google.dagger:dagger:$dagger_version")
+    implementation ("com.google.dagger:dagger-android:$dagger_version")
+    kapt ("com.google.dagger:dagger-compiler:$dagger_version")
+    kapt ("com.google.dagger:dagger-android-processor:$dagger_version")
 }

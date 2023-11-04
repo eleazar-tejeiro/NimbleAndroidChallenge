@@ -81,7 +81,7 @@ fun HeadingTextComponent(value: String) {
 
 @Composable
 fun MyTextFieldComponent(
-    labelValue: String, painterResource: Painter,
+    labelValue: String,
     onTextChanged: (String) -> Unit,
     errorStatus: Boolean = false
 ) {
@@ -91,16 +91,19 @@ fun MyTextFieldComponent(
     }
     val localFocusManager = LocalFocusManager.current
 
-    OutlinedTextField(
+    TextField(
         modifier = Modifier
+            .height(56.dp)
             .fillMaxWidth()
             .clip(componentShapes.small),
         label = { Text(text = labelValue) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Primary,
-            focusedLabelColor = Primary,
-            cursorColor = Primary,
-            backgroundColor = BgColor
+            textColor = BgColor,
+            focusedBorderColor = ColorHolder,
+            focusedLabelColor = ColorHolder,
+            cursorColor = ColorHolder,
+            placeholderColor = ColorHolder,
+            backgroundColor = ColorBackgroundField
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         singleLine = true,
@@ -110,9 +113,6 @@ fun MyTextFieldComponent(
             textValue.value = it
             onTextChanged(it)
         },
-        leadingIcon = {
-            Icon(painter = painterResource, contentDescription = "")
-        },
         isError = !errorStatus
     )
 }
@@ -120,7 +120,7 @@ fun MyTextFieldComponent(
 
 @Composable
 fun PasswordTextFieldComponent(
-    labelValue: String, painterResource: Painter,
+    labelValue: String,
     onTextSelected: (String) -> Unit,
     errorStatus: Boolean = false
 ) {
@@ -134,16 +134,18 @@ fun PasswordTextFieldComponent(
         mutableStateOf(false)
     }
 
-    OutlinedTextField(
+    TextField(
         modifier = Modifier
+            .height(56.dp)
             .fillMaxWidth()
             .clip(componentShapes.small),
         label = { Text(text = labelValue) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Primary,
-            focusedLabelColor = Primary,
-            cursorColor = Primary,
-            backgroundColor = BgColor
+            textColor = BgColor,
+            focusedBorderColor = BgColor,
+            focusedLabelColor = BgColor,
+            cursorColor = BgColor,
+            backgroundColor = ColorBackgroundField
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
@@ -158,9 +160,6 @@ fun PasswordTextFieldComponent(
         onValueChange = {
             password.value = it
             onTextSelected(it)
-        },
-        leadingIcon = {
-            Icon(painter = painterResource, contentDescription = "")
         },
         trailingIcon = {
 
@@ -258,7 +257,7 @@ fun ButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boole
         },
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(Color.Transparent),
-        shape = RoundedCornerShape(30.dp),
+        shape = RoundedCornerShape(10.dp),
         enabled = isEnabled
     ) {
         Box(
@@ -267,7 +266,7 @@ fun ButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boole
                 .heightIn(56.dp)
                 .background(
                     color = Color(0xFFFFFFFF),
-                    shape = RoundedCornerShape(30.dp)
+                    shape = RoundedCornerShape(10.dp)
                 ),
             contentAlignment = Alignment.Center
         ) {
